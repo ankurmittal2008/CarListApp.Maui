@@ -18,13 +18,19 @@ namespace CarListApp.Maui.Services
         public CarApiService()
         {
             var baseAddress = GetBaseAdress();
-            _httpClient = new() { BaseAddress = new Uri(baseAddress) };
+            _httpClient = new(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            }) 
+            { 
+                BaseAddress = new Uri(baseAddress) 
+            };
         }
 
         private string GetBaseAdress()
         {
             #if DEBUG
-                return DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:8099" : "http://localhost:8099";
+                return DeviceInfo.Platform == DevicePlatform.Android ? "https://10.0.2.2:7075" : "http://localhost:8099";
             #elif RELEASE
                 // published address here
                 return "https://carlistappapi20221121135717.azurewebsites.net";
@@ -51,6 +57,7 @@ namespace CarListApp.Maui.Services
         {
             try
             {
+                await SetAuthToken();
                 var response = await _httpClient.GetStringAsync("/cars/" + id);
                 return JsonConvert.DeserializeObject<Car>(response);
             }
