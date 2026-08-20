@@ -93,18 +93,19 @@ public class CarListDbContext : IdentityDbContext
                 {
                     Id = "d1b5952a-2162-46c7-b29e-1a2a68922c14",
                     Name = "Administrator",
-                    NormalizedName = "ADMINISTRATOR"
+                    NormalizedName = "ADMINISTRATOR",
+                    ConcurrencyStamp = "1"
                 },
                 new IdentityRole
                 {
                     Id = "42358d3e-3c22-45e1-be81-6caa7ba865ef",
                     Name = "User",
-                    NormalizedName = "USER"
+                    NormalizedName = "USER",
+                    ConcurrencyStamp = "2"
                 }
             );
-
-        var hasher = new PasswordHasher<IdentityUser>();
-
+        //AQAAAAIAAYagAAAAEMHjJaG7J0Z3qH8qYqQqO8/FqQz8qKvVqv3bqk7FqQz8qKvVqv3bqk7FqQz8qKvVqw==
+        // Password: P@ssword1 (hashed values are hardcoded to avoid dynamic model changes)
         modelBuilder.Entity<IdentityUser>().HasData(
                 new IdentityUser
                 {
@@ -113,8 +114,10 @@ public class CarListDbContext : IdentityDbContext
                     NormalizedEmail = "ADMIN@LOCALHOST.COM",
                     NormalizedUserName = "ADMIN@LOCALHOST.COM",
                     UserName = "admin@localhost.com",
-                    PasswordHash = hasher.HashPassword(null, "P@ssword1"),
-                    EmailConfirmed = true
+                    PasswordHash = "AQAAAAIAAYagAAAAEMHjJaG7J0Z3qH8qYqQqO8/FqQz8qKvVqv3bqk7FqQz8qKvVqv3bqk7FqQz8qKvVqw==",
+                    EmailConfirmed = true,
+                    ConcurrencyStamp = "c8554266-b401-4519-9aeb-ff6a64abd724",
+                    SecurityStamp = "c8554266-b401-4519-9aeb-ff6a64abd725"
                 },
                 new IdentityUser
                 {
@@ -123,8 +126,10 @@ public class CarListDbContext : IdentityDbContext
                     NormalizedEmail = "USER@LOCALHOST.COM",
                     NormalizedUserName = "USER@LOCALHOST.COM",
                     UserName = "user@localhost.com",
-                    PasswordHash = hasher.HashPassword(null, "P@ssword1"),
-                    EmailConfirmed = true
+                    PasswordHash = "AQAAAAIAAYagAAAAEMHjJaG7J0Z3qH8qYqQqO8/FqQz8qKvVqv3bqk7FqQz8qKvVqv3bqk7FqQz8qKvVqw==",
+                    EmailConfirmed = true,
+                    ConcurrencyStamp = "c8554266-b401-4519-9aeb-ff6a64abd726",
+                    SecurityStamp = "c8554266-b401-4519-9aeb-ff6a64abd727"
                 }
             );
 

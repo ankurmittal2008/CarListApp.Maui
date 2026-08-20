@@ -80,7 +80,7 @@ namespace CarListApp.Maui.Services
                 result = conn.Insert(car);
                 StatusMessage = result == 0 ? "Insert Failed" : "Insert Successful";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 StatusMessage = "Failed to Insert data.";
             }
@@ -98,7 +98,7 @@ namespace CarListApp.Maui.Services
                 result = conn.Update(car);
                 StatusMessage = result == 0 ? "Update Failed" : "Update Successful";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 StatusMessage = "Failed to Update data.";
             }

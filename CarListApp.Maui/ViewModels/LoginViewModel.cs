@@ -31,14 +31,14 @@ namespace CarListApp.Maui.ViewModels
         [RelayCommand]
         async Task Login()
         {
-            if(string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            if(string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
             {
                 await DisplayLoginMessage("Invalid Login Attempt");
             }
             else
             {
                 // Call API to attempt a login
-                var loginModel = new LoginModel(username, password);
+                var loginModel = new LoginModel(Username, Password);
 
                 var response = await carApiService.Login(loginModel);
 
@@ -76,7 +76,7 @@ namespace CarListApp.Maui.ViewModels
 
         async Task DisplayLoginMessage(string message)
         {
-            await Shell.Current.DisplayAlert("Login Attempt Result", message, "OK");
+            await Shell.Current.DisplayAlertAsync("Login Attempt Result", message, "OK");
             Password = string.Empty;
         }
     }

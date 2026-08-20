@@ -5,13 +5,16 @@ namespace CarListApp.Maui;
 
 public partial class App : Application
 {
-    public static UserInfo UserInfo;
-    public static CarDatabaseService CarDatabaseService { get; private set; }
-    public App(CarDatabaseService carDatabaseService)
+	public static UserInfo UserInfo;
+	public static CarDatabaseService CarDatabaseService { get; private set; }
+	public App(CarDatabaseService carDatabaseService)
 	{
 		InitializeComponent();
+		CarDatabaseService = carDatabaseService;
+	}
 
-		MainPage = new AppShell();
-        CarDatabaseService = carDatabaseService;
-    }
+	protected override Window CreateWindow(IActivationState activationState)
+	{
+		return new Window(new AppShell());
+	}
 }

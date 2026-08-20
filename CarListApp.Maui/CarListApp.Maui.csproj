@@ -11,6 +11,12 @@
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 
+		<!-- Override the workload-bundled MAUI version to pick up a newer Microsoft.Maui.Controls release from NuGet -->
+		<MauiVersion>10.0.100</MauiVersion>
+
+		<!-- Suppress MVVM Toolkit warnings that only apply to WinRT scenarios (UWP/WinUI3), not MAUI -->
+		<NoWarn>$(NoWarn);MVVMTK0045</NoWarn>
+
 		<!-- Display name -->
 		<ApplicationTitle>CarListApp.Maui</ApplicationTitle>
 
@@ -61,11 +67,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
-	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-	  <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
-	  <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.1" />
-	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.10.0" />
+	  <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.100" />
+	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+	  <PackageReference Include="sqlite-net-pcl" Version="1.11.285" />
+	  <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="3.0.5" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.22.0" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -18,12 +18,17 @@ namespace CarListApp.Maui.ViewModels
     {
         public LogoutViewModel()
         {
-            Logout();
+            // Execute logout asynchronously without blocking constructor
+            _ = LogoutAsync();
         }
 
+        private async Task LogoutAsync()
+        {
+            await Logout();
+        }
 
         [RelayCommand]
-        async void Logout()
+        async Task Logout()
         {
             SecureStorage.Remove("Token");
             App.UserInfo = null;

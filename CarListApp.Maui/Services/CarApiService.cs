@@ -45,7 +45,7 @@ namespace CarListApp.Maui.Services
                 var response = await _httpClient.GetStringAsync("/cars");
                 return JsonConvert.DeserializeObject<List<Car>>(response);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 StatusMessage = "Failed to retrieve data.";
             }
@@ -61,7 +61,7 @@ namespace CarListApp.Maui.Services
                 var response = await _httpClient.GetStringAsync("/cars/" + id);
                 return JsonConvert.DeserializeObject<Car>(response);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 StatusMessage = "Failed to retrieve data.";
             }
@@ -77,7 +77,7 @@ namespace CarListApp.Maui.Services
                 response.EnsureSuccessStatusCode();
                 StatusMessage = "Insert Successful";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 StatusMessage = "Failed to add data.";
             }
@@ -92,7 +92,7 @@ namespace CarListApp.Maui.Services
                 response.EnsureSuccessStatusCode();
                 StatusMessage = "Delete Successful";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 StatusMessage = "Failed to delete data.";
             }
@@ -106,7 +106,7 @@ namespace CarListApp.Maui.Services
                 response.EnsureSuccessStatusCode();
                 StatusMessage = "Update Successful";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 StatusMessage = "Failed to update data.";
             }
@@ -122,7 +122,7 @@ namespace CarListApp.Maui.Services
 
                 return JsonConvert.DeserializeObject<AuthResponseModel>(await response.Content.ReadAsStringAsync());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 StatusMessage = "Failed to login successfully.";
                 return new AuthResponseModel();

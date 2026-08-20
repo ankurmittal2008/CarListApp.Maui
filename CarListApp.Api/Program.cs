@@ -41,7 +41,7 @@ builder.Services.AddAuthentication(options => {
         ValidAudience = builder.Configuration["JwtSettings:Audience"],
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"] ?? throw new InvalidOperationException("JwtSettings:Key is not configured")))
     };
 });
 
@@ -62,9 +62,51 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 using (var scope = app.Services.CreateScope())
-using (var context = scope.ServiceProvider.GetService<CarListDbContext>())
 {
-    context.Database.Migrate();
+    var context = scope.ServiceProvider.GetService<CarListDbContext>();
+    var userManager = scope.ServiceProvider.GetService<UserManager<IdentityUser>>();
+
+    context?.Database.Migrate();
+
+    // Recreate users with properly hashed passwords
+    var adminUser = await userManager!.FindByEmailAsync("admin@localhost.com");
+    if (adminUser != null)
+    {
+        // Remove existing user to recreate with correct password
+        await userManager.DeleteAsync(adminUser);
+    }
+
+    var regularUser = await userManager.FindByEmailAsync("user@localhost.com");
+    if (regularUser != null)
+    {
+        await userManager.DeleteAsync(regularUser);
+    }
+
+    // Create admin user with correct password hash
+    adminUser = new IdentityUser
+    {
+        Id = "408aa945-3d84-4421-8342-7269ec64d949",
+        Email = "admin@localhost.com",
+        UserName = "admin@localhost.com",
+        EmailConfirmed = true,
+        NormalizedEmail = "ADMIN@LOCALHOST.COM",
+        NormalizedUserName = "ADMIN@LOCALHOST.COM"
+    };
+    await userManager.CreateAsync(adminUser, "P@ssword1");
+    await userManager.AddToRoleAsync(adminUser, "Administrator");
+
+    // Create regular user with correct password hash
+    regularUser = new IdentityUser
+    {
+        Id = "3f4631bd-f907-4409-b416-ba356312e659",
+        Email = "user@localhost.com",
+        UserName = "user@localhost.com",
+        EmailConfirmed = true,
+        NormalizedEmail = "USER@LOCALHOST.COM",
+        NormalizedUserName = "USER@LOCALHOST.COM"
+    };
+    await userManager.CreateAsync(regularUser, "P@ssword1");
+    await userManager.AddToRoleAsync(regularUser, "User");
 }
 
 app.UseSwagger();
@@ -133,7 +175,7 @@ app.MapPost("/login", async (LoginDto loginDto, UserManager<IdentityUser> _userM
     }
 
     // Generate an access token
-    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]));
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"] ?? throw new InvalidOperationException("JwtSettings:Key is not configured")));
     var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
     var roles = await _userManager.GetRolesAsync(user);
@@ -142,7 +184,7 @@ app.MapPost("/login", async (LoginDto loginDto, UserManager<IdentityUser> _userM
     {
         new Claim(JwtRegisteredClaimNames.Sub, user.Id),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        new Claim(ClaimTypes.Email, user.Email),
+        new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
         new Claim("email_confirmed", user.EmailConfirmed.ToString())
     }.Union(claims)
     .Union(roles.Select(role => new Claim(ClaimTypes.Role, role)));
@@ -161,7 +203,7 @@ app.MapPost("/login", async (LoginDto loginDto, UserManager<IdentityUser> _userM
     var response = new AuthResponseDto
     {
         UserId = user.Id,
-        Username = user.UserName,
+        Username = user.UserName ?? string.Empty,
         Token = accessToken
     };
 
@@ -174,13 +216,13 @@ app.Run();
 
 internal class LoginDto
 {
-    public string Username { get; set; }
-    public string Password { get; set; }
+    public required string Username { get; set; }
+    public required string Password { get; set; }
 }
 
 internal class AuthResponseDto
 {
-    public string UserId { get; set; }
-    public string Username { get; set; }
-    public string Token { get; set; }
+    public required string UserId { get; set; }
+    public required string Username { get; set; }
+    public required string Token { get; set; }
 }
