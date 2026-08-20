@@ -39,6 +39,12 @@ namespace CarListApp.Maui.ViewModels
             if(accessType == NetworkAccess.Internet)
             {
                 Car = await carApiService.GetCar(Id);
+                if (Car == null)
+                {
+                    SecureStorage.Remove("Token");
+                    App.UserInfo = null;
+                    await Shell.Current.GoToAsync($"{nameof(LoginPage)}");
+                }
             }
             else
             {
