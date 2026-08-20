@@ -48,7 +48,7 @@ namespace CarListApp.Maui.ViewModels
                 IsLoading = true;
                 if (Cars.Any()) Cars.Clear();
                 var cars = new List<Car>();
-                if(accessType == NetworkAccess.Internet)
+                if(accessType == NetworkAccess.Internet || accessType == NetworkAccess.ConstrainedInternet)
                 {
                     cars = await carApiService.GetCars();
                 }
@@ -97,7 +97,7 @@ namespace CarListApp.Maui.ViewModels
 
             if (CarId != 0)
             {
-                if (accessType == NetworkAccess.Internet)
+                if (accessType == NetworkAccess.Internet || accessType == NetworkAccess.ConstrainedInternet)
                 {
                     await carApiService.UpdateCar(CarId, car);
                     message = carApiService.StatusMessage;
@@ -110,7 +110,7 @@ namespace CarListApp.Maui.ViewModels
             }
             else
             {
-                if (accessType == NetworkAccess.Internet)
+                if (accessType == NetworkAccess.Internet || accessType == NetworkAccess.ConstrainedInternet)
                 {
                     await carApiService.AddCar(car);
                     message = carApiService.StatusMessage;
@@ -132,13 +132,13 @@ namespace CarListApp.Maui.ViewModels
         {
             if (id==0)
             {
-                await ShowAlert("Please try again");
-                return;
-            }
+                    await ShowAlert("Please try again");
+                    return;
+                }
 
-            if (accessType == NetworkAccess.Internet)
-            {
-                await carApiService.DeleteCar(id);
+                if (accessType == NetworkAccess.Internet || accessType == NetworkAccess.ConstrainedInternet)
+                {
+                    await carApiService.DeleteCar(id);
                 message = carApiService.StatusMessage;
             }
             else
@@ -163,7 +163,7 @@ namespace CarListApp.Maui.ViewModels
             AddEditButtonText = editButtonText;
             CarId = id;
             Car car;
-            if (accessType == NetworkAccess.Internet)
+            if (accessType == NetworkAccess.Internet || accessType == NetworkAccess.ConstrainedInternet)
             {
                 car = await carApiService.GetCar(CarId);
             }
@@ -189,7 +189,7 @@ namespace CarListApp.Maui.ViewModels
 
         private async Task ShowAlert(string message)
         {
-            await Shell.Current.DisplayAlert("Info", message, "Ok");
+            await Shell.Current.DisplayAlertAsync("Info", message, "Ok");
         }
     }
 }

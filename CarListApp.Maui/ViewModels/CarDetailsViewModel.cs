@@ -36,7 +36,8 @@ namespace CarListApp.Maui.ViewModels
 
         public async Task GetCarData()
         {
-            if(accessType == NetworkAccess.Internet)
+            if(accessType == NetworkAccess.Internet ||
+                accessType == NetworkAccess.ConstrainedInternet)
             {
                 Car = await carApiService.GetCar(Id);
                 if (Car == null)

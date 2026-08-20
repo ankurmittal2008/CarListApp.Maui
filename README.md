@@ -27,6 +27,12 @@ git clone https://github.com/trevoirwilliams/CarListApp.Maui.git
 
 Then, open the solution file (`CarListApp.Maui.sln`) in Visual Studio and build the solution. The app should launch automatically in the emulator.
 
+## Run migration
+```
+dotnet tool install --global dotnet-ef
+dotnet tool install --global dotnet-ef
+```
+
 ## Contributing
 
 If you would like to contribute to the development of this app, please feel free to submit a pull request. Make sure to follow the [contribution guidelines](CONTRIBUTING.md) when submitting your changes.

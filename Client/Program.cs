@@ -19,7 +19,7 @@ namespace Client
             loginResponse.EnsureSuccessStatusCode();
             var loginResponseContent = await loginResponse.Content.ReadAsStringAsync();
             var authResponse = JsonConvert.DeserializeObject<AuthResponseModel>(loginResponseContent);
-            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authResponse.Token);
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authResponse?.Token ?? throw new InvalidOperationException("Authentication failed"));
             
             var response = await httpClient.GetStringAsync("/cars");
             var cars = JsonConvert.DeserializeObject<List<Car>>(response);
@@ -33,9 +33,9 @@ namespace Client
 
     public class AuthResponseModel
     {
-        public string UserId { get; set; }
-        public string Username { get; set; }
-        public string Token { get; set; }
+        public required string UserId { get; set; }
+        public required string Username { get; set; }
+        public required string Token { get; set; }
     }
 
     public abstract class BaseEntity
@@ -45,8 +45,8 @@ namespace Client
 
     public class Car : BaseEntity
     {
-        public string Make { get; set; }
-        public string Model { get; set; }
-        public string Vin { get; set; }
+        public required string Make { get; set; }
+        public required string Model { get; set; }
+        public required string Vin { get; set; }
     }
 }
