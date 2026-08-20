@@ -30,7 +30,13 @@ Then, open the solution file (`CarListApp.Maui.sln`) in Visual Studio and build 
 ## Run migration
 ```
 dotnet tool install --global dotnet-ef
-dotnet tool install --global dotnet-ef
+dotnet ef migrations add "initial migration" --project CarListApp.Api\CarListApp.Api.csproj
+```
+
+## Signing
+```
+keytool -genkey -v -keystore carlist.app.keystore -alias key -keyalg RSA -keysize 2048 -validity 10000
+dotnet publish -f:net6.0-android -c:Release /p:AndroidSigningKeyPass=P@ssword1 /p:AndroidSigningStorePass=P@ssword1
 ```
 
 ## Contributing
