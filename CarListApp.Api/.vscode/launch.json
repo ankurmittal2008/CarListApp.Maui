@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Launch (CarListApp.Api)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/CarListApp.Api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            }
+        },
+        {
+            // dotnet run (or dotnet CarListApp.Api.dll) must be used to start the application before attaching
+            "name": ".NET Attach (CarListApp.Api)",
+            "type": "coreclr",
+            "request": "attach",
+            "processName": "CarListApp.Api"
+        }
+    ]
+}

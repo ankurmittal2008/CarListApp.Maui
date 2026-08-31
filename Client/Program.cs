@@ -14,7 +14,7 @@ namespace Client
                 ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
             });
 
-            httpClient.BaseAddress = new Uri("https://localhost:7075");
+            httpClient.BaseAddress = new Uri("http://localhost:5075");
             var loginResponse = await httpClient.PostAsync("/login", new StringContent("{\"username\":\"admin@localhost.com\",\"password\":\"P@ssword1\"}", Encoding.UTF8, "application/json"));
             loginResponse.EnsureSuccessStatusCode();
             var loginResponseContent = await loginResponse.Content.ReadAsStringAsync();

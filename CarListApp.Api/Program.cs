@@ -21,7 +21,7 @@ builder.Services.AddCors(o => {
     o.AddPolicy("AllowAll", a => a.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 });
 
-var conn = new SqliteConnection($"Data Source=carlist.db");
+var conn = new SqliteConnection($"Data Source={builder.Configuration["Db:Location"]}carlist.db");
 builder.Services.AddDbContext<CarListDbContext>(o => o.UseSqlite(conn));
 
 
@@ -109,18 +109,24 @@ using (var scope = app.Services.CreateScope())
     await userManager.AddToRoleAsync(regularUser, "User");
 }
 
+app.UseSerilogRequestLogging();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCors("AllowAll");
 
-app.MapGet("/cars", async (CarListDbContext db) => await db.Cars.ToListAsync());
+app.MapGet("/cars", async (CarListDbContext db) =>
+{
+    Log.Information("Fetching all cars");
+    return await db.Cars.ToListAsync();
+});
 
 app.MapGet("/cars/{id}", async (int id, CarListDbContext db) =>
     await db.Cars.FindAsync(id) is Car car ? Results.Ok(car) : Results.NotFound()
